@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-producer
+  namespace: kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-producer
+  template:
+    metadata:
+      labels:
+        app: kafka-producer
+    spec:
+      imagePullSecrets:
+        - name: my-gar1-secret
+      containers:
+        - name: kafka-producer
+          image: us-central1-docker.pkg.dev/burner-keskumar5/kafka-repo/kafka-producer:v1
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: "34.45.92.186:80"
