@@ -20,6 +20,3 @@ spec:
           image: us-central1-docker.pkg.dev/burner-keskumar5/kafka-repo/kafka-producer:v1
           ports:
             - containerPort: 8080
-          env:
-            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
-              value: "34.44.128.141:80"
