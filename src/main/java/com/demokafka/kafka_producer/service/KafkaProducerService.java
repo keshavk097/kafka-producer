@@ -1,37 +1,29 @@
 package com.demokafka.kafka_producer.service;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-
-import java.util.Map;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import java.util.*;
 
 @Service
 public class KafkaProducerService {
-    private final WebClient webClient;
+    private final RestTemplate restTemplate = new RestTemplate();
+    private final String kafkaBridgeUrl = "http://34.44.128.141/topics/my-topic"; // Use the Kafka Bridge External IP
 
-    @Value("${kafka.bridge.url}")
-    private String kafkaBridgeUrl;
+    public String sendMessage(String message) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/vnd.kafka.json.v2+json");
 
-    @Value("${kafka.topic}")
-    private String topic;
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("records", Collections.singletonList(Collections.singletonMap("value", message)));
 
-    public KafkaProducerService(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.build();
-    }
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(payload, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity(kafkaBridgeUrl, request, String.class);
 
-    public void sendMessage(String message) {
-        String url = kafkaBridgeUrl + "/topics/" + topic;
-
-        webClient.post()
-                .uri(url)
-                .bodyValue(Map.of(
-                        "key", "my-key",
-                        "value", message
-                ))
-                .retrieve()
-                .bodyToMono(String.class)
-                .subscribe(response -> System.out.println("Message Sent: " + response));
+        return response.getBody();
     }
 }
+
 
