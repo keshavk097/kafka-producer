@@ -32,9 +32,8 @@ public class StandingOrder {
 
     private String status;
 
-    private LocalDateTime orderDate;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     public Integer getId() {
         return id;
@@ -100,29 +99,20 @@ public class StandingOrder {
         this.status = status;
     }
 
-    public LocalDateTime getOrderDate() {
-        return orderDate;
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
-    public void setOrderDate(LocalDateTime orderDate) {
-        this.orderDate = orderDate;
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDate getEndDate() {
+        return endDate;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    // Getters and setters
+// Getters and setters
 }

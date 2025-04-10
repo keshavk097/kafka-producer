@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +38,21 @@ public class StandingOrderController {
                 response.put("message", "Failed to create standing order. Account number is invalid.");
                 return ResponseEntity.badRequest().body(response);
             }
-
+            LocalDate today = LocalDate.now();
+            if (standingOrder.getStartDate() != null && standingOrder.getEndDate() != null) {
+                if (!today.isBefore(standingOrder.getStartDate()) && !today.isAfter(standingOrder.getEndDate())) {
+                    standingOrder.setStatus("active");
+                } else {
+                    standingOrder.setStatus("inactive");
+                }
+            }
+            LocalDate nextExecutionDate = switch (standingOrder.getFrequency().toLowerCase()) {
+                case "daily" -> today.plusDays(1);
+                case "weekly" -> today.plusWeeks(1);
+                case "monthly" -> today.plusMonths(1);
+                default -> today;
+            };
+            standingOrder.setNextExecutionDate(nextExecutionDate);
             // Save to DB
             StandingOrder saved = repository.save(standingOrder);
 
