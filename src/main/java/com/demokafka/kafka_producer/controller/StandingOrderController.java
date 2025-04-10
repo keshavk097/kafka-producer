@@ -22,4 +22,10 @@ public class StandingOrderController {
     public List<StandingOrder> getAllStandingOrders() {
         return repository.findAll();
     }
+
+    @PostMapping("/insert")
+	public String insert(@RequestBody StandingOrder standingOrder) {
+		repository.save(standingOrder);
+		return "Message sent to Database";
+	}
 }
