@@ -47,9 +47,9 @@ public class StandingOrderController {
                 }
             }
             LocalDate nextExecutionDate = switch (standingOrder.getFrequency().toLowerCase()) {
-                case "daily" -> today.plusDays(1);
-                case "weekly" -> today.plusWeeks(1);
-                case "monthly" -> today.plusMonths(1);
+                case "daily" -> standingOrder.getStartDate().plusDays(1);
+                case "weekly" -> standingOrder.getStartDate().plusWeeks(1);
+                case "monthly" -> standingOrder.getStartDate().plusMonths(1);
                 default -> today;
             };
             standingOrder.setNextExecutionDate(nextExecutionDate);
