@@ -2,12 +2,17 @@ package com.demokafka.kafka_producer.controller;
 
 import com.demokafka.kafka_producer.model.StandingOrder;
 import com.demokafka.kafka_producer.repository.StandingOrderRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/standing-orders")
+@CrossOrigin
 public class StandingOrderController {
 
     private final StandingOrderRepository repository;
@@ -22,8 +27,29 @@ public class StandingOrderController {
     }
 
     @PostMapping("/insert")
-	public String insert(@RequestBody StandingOrder standingOrder) {
-		repository.save(standingOrder);
-		return "Message sent to Database";
-	}
+    public ResponseEntity<Map<String, Object>> insert(@RequestBody StandingOrder standingOrder) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            // Optional: Add basic validation
+            if (standingOrder.getAccountNumber() == null || standingOrder.getAccountNumber().isEmpty()) {
+                response.put("status", "error");
+                response.put("message", "Failed to create standing order. Account number is invalid.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            // Save to DB
+            StandingOrder saved = repository.save(standingOrder);
+
+            response.put("status", "success");
+            response.put("message", "Standing order created successfully.");
+            response.put("id", "SO" + saved.getId()); // Example: prefixing ID
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
+        } catch (Exception e) {
+            response.put("status", "error");
+            response.put("message", "Failed to create standing order. " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }
