@@ -2,9 +2,7 @@ package com.demokafka.kafka_producer.controller;
 
 import com.demokafka.kafka_producer.model.StandingOrder;
 import com.demokafka.kafka_producer.repository.StandingOrderRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
