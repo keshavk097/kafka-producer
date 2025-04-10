@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Table(name = "standing_order")
 @Getter
 @Setter
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class StandingOrder {
 
     @Id
